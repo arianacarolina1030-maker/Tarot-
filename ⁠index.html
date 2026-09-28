@@ -3,97 +3,139 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tarot Archivo Moderno</title>
+    <title>Tarot Archivo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+      body {
+        background-color: #0d0f1d;
+        color: #e2e8f0;
+      }
+      .card-bg {
+        background-color: #131629;
+        border: 1px solid #232742;
+      }
+      .inner-card-bg {
+        background-color: #1b1e36;
+      }
+      .btn-active {
+        background-color: #7c3aed;
+        color: #ffffff;
+      }
+      .btn-inactive {
+        background-color: #1e2238;
+        color: #94a3b8;
+      }
+      .badge-purple {
+        background-color: #4c1d95;
+        color: #c084fc;
+      }
+    </style>
   </head>
-  <body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col">
-    <nav class="bg-slate-900 border-b border-purple-900/40 p-4 sticky top-0 z-50">
-      <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <h1 class="text-lg md:text-xl font-bold tracking-wider text-purple-400 flex items-center gap-2">
-          <i class="fa-solid fa-moon"></i> TAROT ARCHIVO
-        </h1>
-        <div class="flex gap-1 md:gap-2 text-xs md:text-sm">
-          <button onclick="cambiarModulo('biblioteca')" id="btn-biblioteca" class="px-3 py-2 rounded-lg bg-purple-700 text-white font-medium transition">
-            <i class="fa-solid fa-book-open mr-1"></i> Archivo
-          </button>
-          <button onclick="cambiarModulo('oraculo')" id="btn-oraculo" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300 font-medium hover:bg-purple-700 hover:text-white transition">
-            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Oráculo
-          </button>
-          <button onclick="cambiarModulo('creador')" id="btn-creador" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300 font-medium hover:bg-purple-700 hover:text-white transition">
-            <i class="fa-solid fa-pen-nib mr-1"></i> Creador
-          </button>
+  <body class="min-h-screen font-sans flex flex-col items-center p-3 md:p-6">
+    
+    <!-- Encabezado y Navegación -->
+    <header class="w-full max-w-md my-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-moon text-purple-400 text-2xl"></i>
+        <div class="leading-none">
+          <h1 class="text-lg font-bold text-purple-300 tracking-wider">TAROT</h1>
+          <h1 class="text-lg font-bold text-purple-300 tracking-wider">ARCHIVO</h1>
         </div>
       </div>
-    </nav>
-    <main class="max-w-6xl mx-auto p-4 md:p-6 flex-1 w-full">
-      <section id="modulo-biblioteca" class="space-y-6">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-900 p-4 rounded-xl border border-slate-800">
-          <input type="text" id="buscador" oninput="filtrarBiblioteca()" placeholder="Buscar carta, concepto o meme..." class="w-full md:w-96 px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-purple-500 text-sm" />
-          <span id="contador-cartas" class="text-xs text-slate-400">Mostrando registros</span>
+      <div class="flex gap-1.5 bg-[#131629] p-1.5 rounded-2xl border border-[#232742]">
+        <button onclick="cambiarModulo('biblioteca')" id="btn-biblioteca" class="px-3 py-2 rounded-xl text-xs font-medium flex flex-col items-center gap-1 btn-active transition">
+          <i class="fa-solid fa-book-open"></i> Archivo
+        </button>
+        <button onclick="cambiarModulo('oraculo')" id="btn-oraculo" class="px-3 py-2 rounded-xl text-xs font-medium flex flex-col items-center gap-1 btn-inactive transition">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Oráculo
+        </button>
+        <button onclick="cambiarModulo('creador')" id="btn-creador" class="px-3 py-2 rounded-xl text-xs font-medium flex flex-col items-center gap-1 btn-inactive transition">
+          <i class="fa-solid fa-pen-nib"></i> Creador
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="w-full max-w-md space-y-4">
+
+      <!-- MÓDULO ARCHIVO / BIBLIOTECA -->
+      <section id="modulo-biblioteca" class="space-y-4">
+        <div class="w-full">
+          <input type="text" id="buscador" oninput="filtrarBiblioteca()" placeholder="Buscar carta, concepto..." class="w-full px-4 py-3 rounded-2xl card-bg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
         </div>
-        <div id="grid-cartas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        
+        <div id="grid-cartas" class="space-y-4"></div>
       </section>
-      <section id="modulo-oraculo" class="hidden space-y-6 text-center">
-        <div class="max-w-md mx-auto bg-slate-900 p-6 rounded-2xl border border-purple-800/40 shadow-xl space-y-6">
-          <h2 class="text-xl font-bold text-purple-300">Tirada Diaria del Archivo</h2>
-          <p class="text-slate-400 text-xs">Mensaje tradicional combinado con la perspectiva cotidiana.</p>
-          <div id="carta-oraculo-display" class="w-44 h-64 mx-auto bg-slate-950 border-2 border-dashed border-purple-500/40 rounded-xl flex items-center justify-center text-slate-500 text-4xl shadow-inner"></div>
-          <button onclick="sacarCartaOraculo()" class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition shadow-lg shadow-purple-900/30 text-sm">Sacar Carta</button>
-          <div id="resultado-oraculo" class="hidden text-left bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-            <h3 id="oraculo-titulo" class="text-base font-bold text-purple-400"></h3>
+
+      <!-- MÓDULO ORÁCULO -->
+      <section id="modulo-oraculo" class="hidden space-y-5 text-center">
+        <div class="card-bg p-6 rounded-3xl space-y-5">
+          <div id="carta-oraculo-display" class="w-48 h-64 mx-auto border-2 border-dashed border-purple-500/30 rounded-2xl flex flex-col items-center justify-center text-slate-500 bg-[#0d0f1d] p-4">
+            <i class="fa-solid fa-sparkles text-3xl mb-2 text-purple-400"></i>
+            <span class="text-xs text-slate-400">Toca el botón para sacar una carta</span>
+          </div>
+
+          <button onclick="sacarCartaOraculo()" class="w-full py-3.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-2xl transition shadow-lg shadow-purple-900/40 text-sm">
+            Sacar Carta
+          </button>
+
+          <div id="resultado-oraculo" class="hidden text-left card-bg p-5 rounded-2xl space-y-3">
+            <h3 id="oraculo-titulo" class="text-base font-bold text-purple-300"></h3>
             <p id="oraculo-mensaje" class="text-slate-300 text-xs leading-relaxed"></p>
           </div>
         </div>
       </section>
-      <section id="modulo-creador" class="hidden space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4">
-            <h2 class="text-lg font-bold text-purple-300">Generador de Ficha Social</h2>
-            <div>
-              <label class="block text-xs font-medium text-slate-400 mb-1">Seleccionar Arcano</label>
-              <select id="creador-carta" onchange="generarCard()" class="w-full p-2 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm"></select>
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-slate-400 mb-1">Frase / Situación Cotidiana</label>
-              <textarea id="creador-texto" oninput="generarCard()" rows="3" placeholder="Ej: Aceptar que aunque duela, ese ciclo ya terminó..." class="w-full p-2 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-purple-500"></textarea>
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-slate-400 mb-1">Enfoque Arquetípico</label>
-              <select id="creador-enfoque" onchange="generarCard()" class="w-full p-2 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm">
-                <option value="VOZ DEL EGO">Voz del Ego</option>
-                <option value="YO SUPERIOR">Voz del Yo Superior</option>
-                <option value="REALIDAD COTIDIANA">Realidad Cotidiana</option>
-                <option value="MEME / REFLEXIÓN">Meme / Reflexión</option>
-              </select>
-            </div>
-            <button onclick="descargarImagen()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 to-indigo-500 text-white font-bold rounded-xl transition shadow-lg shadow-purple-900/30 flex items-center justify-center gap-2 text-sm">
-              <i class="fa-solid fa-download"></i> Descargar Imagen PNG
-            </button>
+
+      <!-- MÓDULO CREADOR -->
+      <section id="modulo-creador" class="hidden space-y-5">
+        <div class="card-bg p-5 rounded-3xl space-y-4">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Seleccionar Arcano</label>
+            <select id="creador-carta" onchange="generarCard()" class="w-full p-3 rounded-xl bg-[#1b1e36] border border-[#232742] text-white text-sm focus:outline-none"></select>
           </div>
-          <div class="flex flex-col items-center justify-center gap-2">
-            <div id="card-preview" class="w-72 h-96 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 border-2 border-purple-500/50 rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden">
-              <div class="flex justify-between items-center text-[10px] text-purple-400 tracking-widest font-mono border-b border-purple-900/40 pb-2">
-                <span>TAROT ARCHIVO</span>
-                <span id="preview-enfoque">REALIDAD COTIDIANA</span>
-              </div>
-              <div class="text-center my-auto space-y-3">
-                <div id="preview-emoji" class="text-5xl drop-shadow-md">🔮</div>
-                <h3 id="preview-titulo" class="text-xl font-bold text-white tracking-wide uppercase">LA MUERTE (XIII)</h3>
-                <p id="preview-texto" class="text-xs text-slate-300 italic px-2 leading-relaxed">"Aunque te duela, se acabó"</p>
-              </div>
-              <div class="text-center text-[10px] text-slate-500 font-mono border-t border-purple-900/40 pt-2">@archivo.tarot.moderno</div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Frase / Situación Cotidiana</label>
+            <textarea id="creador-texto" oninput="generarCard()" rows="3" placeholder="Ej: Aceptar que aunque duela, ese ciclo ya terminó..." class="w-full p-3 rounded-xl bg-[#1b1e36] border border-[#232742] text-white text-sm focus:outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Enfoque Arquetípico</label>
+            <select id="creador-enfoque" onchange="generarCard()" class="w-full p-3 rounded-xl bg-[#1b1e36] border border-[#232742] text-white text-sm focus:outline-none">
+              <option value="VOZ DEL EGO">Voz del Ego</option>
+              <option value="YO SUPERIOR">Voz del Yo Superior</option>
+              <option value="REALIDAD COTIDIANA">Realidad Cotidiana</option>
+              <option value="MEME / REFLEXIÓN">Meme / Reflexión</option>
+            </select>
+          </div>
+          <button onclick="descargarImagen()" class="w-full py-3.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-2xl transition shadow-lg shadow-purple-900/40 flex items-center justify-center gap-2 text-sm">
+            <i class="fa-solid fa-download"></i> Descargar Imagen PNG
+          </button>
+        </div>
+
+        <!-- Vista Previa Tarjeta -->
+        <div class="flex flex-col items-center justify-center gap-2 pt-2">
+          <div id="card-preview" class="w-full max-w-xs h-96 bg-gradient-to-b from-[#131629] via-[#0d0f1d] to-[#131629] border border-purple-500/30 rounded-3xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+            <div class="flex justify-between items-center text-[10px] text-purple-400 tracking-widest font-mono border-b border-purple-900/40 pb-2">
+              <span>TAROT ARCHIVO</span>
+              <span id="preview-enfoque">REALIDAD COTIDIANA</span>
             </div>
-            <span class="text-[11px] text-slate-500">Vista previa para compartir</span>
+            <div class="text-center my-auto space-y-3">
+              <div id="preview-emoji" class="text-5xl drop-shadow-md">🔮</div>
+              <h3 id="preview-titulo" class="text-lg font-bold text-white tracking-wide uppercase">LA MUERTE (XIII)</h3>
+              <p id="preview-texto" class="text-xs text-slate-300 italic px-2 leading-relaxed">"Aunque te duela, se acabó"</p>
+            </div>
+            <div class="text-center text-[10px] text-slate-500 font-mono border-t border-purple-900/40 pt-2">@archivo.tarot.moderno</div>
           </div>
         </div>
       </section>
+
     </main>
+
     <script>
       const dbTarot = [
-        { nombre: "El Loco (0)", emoji: "🃏", categoria: "Arcano Mayor", simbolismo: "Inicios, fe ciega, espontaneidad.", traduccionModerna: "Lanzarte a algo sin saber cómo saldrá, pero confiando.", egoVsYo: "Ego: Miedo al ridículo. / Yo: El salto es necesario." },
-        { nombre: "El Mago (I)", emoji: "🪄", categoria: "Arcano Mayor", simbolismo: "Manifestación, recursos, poder personal.", traduccionModerna: "Tener todo para empezar y dudar en dar el paso.", egoVsYo: "Ego: 'Falta aprender más'. / Yo: 'Tengo todo lo necesario'." },
+        { nombre: "El Loco (0)", emoji: "🎒", categoria: "Arcano Mayor", simbolismo: "Inicios, fe ciega, espontaneidad.", traduccionModerna: "Lanzarte a algo sin saber cómo saldrá, pero confiando.", egoVsYo: "Ego: Miedo al ridículo. / Yo: El salto es necesario." },
+        { nombre: "El Mago (I)", emoji: "🪄", categoria: "Arcano Mayor", simbolismo: "Manifestación, recursos, poder personal.", traduccionModerna: "Tener todo para empezar y dudar en dar el paso.", egoVsYo: "Ego: 'Falta aprender más' / Yo: 'Tengo todo lo necesario'." },
         { nombre: "La Sacerdotisa (II)", emoji: "🌙", categoria: "Arcano Mayor", simbolismo: "Intuición, misterio, voz interior.", traduccionModerna: "Saber la verdad antes de que te la confirmen.", egoVsYo: "Ego: Exigir pruebas. / Yo: Escuchar la corazonada." },
         { nombre: "La Emperatriz (III)", emoji: "👑", categoria: "Arcano Mayor", simbolismo: "Abundancia, creatividad, disfrute.", traduccionModerna: "Crear sin agotarte; disfrutar el proceso.", egoVsYo: "Ego: Culpa por descansar. / Yo: Merezco la plenitud." },
         { nombre: "El Emperador (IV)", emoji: "🏛️", categoria: "Arcano Mayor", simbolismo: "Estructura, límites, autoridad.", traduccionModerna: "Poner límites firmes sin dar explicaciones.", egoVsYo: "Ego: Control rígido. / Yo: La estructura me libera." },
@@ -113,16 +155,7 @@
         { nombre: "La Luna (XVIII)", emoji: "🌊", categoria: "Arcano Mayor", simbolismo: "Inconsciente, proyecciones, miedos.", traduccionModerna: "Crear historias catastróficas en la mente.", egoVsYo: "Ego: Creerle al miedo nocturno. / Yo: Atravesar la niebla." },
         { nombre: "El Sol (XIX)", emoji: "☀️", categoria: "Arcano Mayor", simbolismo: "Claridad, vitalidad, éxito.", traduccionModerna: "Momentos de absoluta alegría y presencia.", egoVsYo: "Ego: Esperar el fallo. / Yo: Brillar sin reservas." },
         { nombre: "El Juicio (XX)", emoji: "🎺", categoria: "Arcano Mayor", simbolismo: "Despertar, llamado interior, perdón.", traduccionModerna: "Darte cuenta de que ya no perteneces a tu pasado.", egoVsYo: "Ego: Severidad y culpa. / Yo: Responder al llamado." },
-        { nombre: "El Mundo (XXI)", emoji: "🌍", categoria: "Arcano Mayor", simbolismo: "Cierre exitoso, integración.", traduccionModerna: "Completar una fase importante con sabiduría.", egoVsYo: "Ego: Miedo a cerrar. / Yo: Celebrar la meta." },
-        { nombre: "As de Bastos", emoji: "🔥", categoria: "Arcano Menor (Bastos)", simbolismo: "Chispa creativa, impulso inicial.", traduccionModerna: "La idea brillante que te llena de energía.", egoVsYo: "Ego: Emoción sin acción. / Yo: Canalizar la chispa." },
-        { nombre: "2 de Bastos", emoji: "🗺️", categoria: "Arcano Menor (Bastos)", simbolismo: "Planificación, decisiones futuras.", traduccionModerna: "Dilema entre ahorrar o darte un gusto diario.", egoVsYo: "Ego: Parálisis por análisis. / Yo: Dirección clara." },
-        { nombre: "3 de Bastos", emoji: "⛵", categoria: "Arcano Menor (Bastos)", simbolismo: "Expansión, ver dar frutos.", traduccionModerna: "Esperar los resultados de algo que sembraste.", egoVsYo: "Ego: Impaciencia. / Yo: Confianza en el tiempo." },
-        { nombre: "As de Copas", emoji: "🍷", categoria: "Arcano Menor (Copas)", simbolismo: "Apertura emocional, amor propio.", traduccionModerna: "Permitirte sentir sin armaduras.", egoVsYo: "Ego: Coraza defensiva. / Yo: Vulnerabilidad fuerte." },
-        { nombre: "5 de Copas", emoji: "🥀", categoria: "Arcano Menor (Copas)", simbolismo: "Duelo, foco en lo perdido.", traduccionModerna: "Lamentar lo que falló ignorando lo que queda.", egoVsYo: "Ego: Victimización. / Yo: Ver lo que aún permanece." },
-        { nombre: "As de Espadas", emoji: "🗡️", categoria: "Arcano Menor (Espadas)", simbolismo: "Claridad mental, verdad directa.", traduccionModerna: "Una conversación honesta que aclara todo.", egoVsYo: "Ego: Usar la verdad para herir. / Yo: Claridad sanadora." },
-        { nombre: "9 de Espadas", emoji: "💭", categoria: "Arcano Menor (Espadas)", simbolismo: "Ansiedad, insomnio, bucle mental.", traduccionModerna: "Pensamientos rumiativos a las 3 AM.", egoVsYo: "Ego: Alimentar el pánico. / Yo: Un pensamiento no es un hecho." },
-        { nombre: "As de Oros", emoji: "🪙", categoria: "Arcano Menor (Oros)", simbolismo: "Oportunidad tangible, estabilidad.", traduccionModerna: "Una propuesta o recurso concreto que llega.", egoVsYo: "Ego: Menospreciar lo pequeño. / Yo: Sembrar con paciencia." },
-        { nombre: "10 de Oros", emoji: "🏰", categoria: "Arcano Menor (Oros)", simbolismo: "Legado, estabilidad, abundancia.", traduccionModerna: "Construir algo sólido y duradero.", egoVsYo: "Ego: Avaricia. / Yo: Abundancia compartida." }
+        { nombre: "El Mundo (XXI)", emoji: "🌍", categoria: "Arcano Mayor", simbolismo: "Cierre exitoso, integración.", traduccionModerna: "Completar una fase importante con sabiduría.", egoVsYo: "Ego: Miedo a cerrar. / Yo: Celebrar la meta." }
       ];
 
       function cargarSelectCreador() {
@@ -135,23 +168,24 @@
         document.getElementById(`modulo-${modulo}`).classList.remove("hidden");
         ["biblioteca", "oraculo", "creador"].forEach((m) => {
           const btn = document.getElementById(`btn-${m}`);
-          btn.className = m === modulo ? "px-3 py-2 rounded-lg bg-purple-700 text-white font-medium transition" : "px-3 py-2 rounded-lg bg-slate-800 text-slate-300 font-medium hover:bg-purple-700 hover:text-white transition";
+          btn.className = m === modulo ? "px-3 py-2 rounded-xl text-xs font-medium flex flex-col items-center gap-1 btn-active transition" : "px-3 py-2 rounded-xl text-xs font-medium flex flex-col items-center gap-1 btn-inactive transition";
         });
       }
 
       function renderBiblioteca(items) {
         const contenedor = document.getElementById("grid-cartas");
-        document.getElementById("contador-cartas").innerText = `Mostrando ${items.length} registros`;
         contenedor.innerHTML = items.map((carta) => `
-          <div class="bg-slate-900 border border-slate-800 hover:border-purple-600/50 rounded-xl p-4 transition space-y-2">
-            <div class="flex justify-between items-center">
+          <div class="card-bg rounded-3xl p-5 space-y-3 relative">
+            <div class="flex justify-between items-start">
               <span class="text-2xl">${carta.emoji}</span>
-              <span class="text-[10px] font-mono px-2 py-0.5 bg-purple-950 text-purple-300 rounded border border-purple-800">${carta.categoria}</span>
+              <span class="text-[10px] px-3 py-1 font-semibold rounded-lg badge-purple">${carta.categoria}</span>
             </div>
             <h3 class="text-base font-bold text-white">${carta.nombre}</h3>
             <p class="text-xs text-slate-400"><strong>Clásico:</strong> ${carta.simbolismo}</p>
-            <p class="text-xs text-purple-300 bg-purple-900/20 p-2 rounded border border-purple-900/40"><strong>Moderno:</strong> ${carta.traduccionModerna}</p>
-            <p class="text-[11px] text-slate-300 italic"><strong>Ego/Yo:</strong> ${carta.egoVsYo}</p>
+            <div class="inner-card-bg p-3.5 rounded-2xl">
+              <p class="text-xs text-purple-200"><strong>Moderno:</strong> ${carta.traduccionModerna}</p>
+            </div>
+            <p class="text-[11px] text-slate-400 italic"><strong>Ego/Yo:</strong> ${carta.egoVsYo}</p>
           </div>
         `).join("");
       }
@@ -165,7 +199,9 @@
       function sacarCartaOraculo() {
         const carta = dbTarot[Math.floor(Math.random() * dbTarot.length)];
         const display = document.getElementById("carta-oraculo-display");
-        display.innerHTML = `<div class="text-center"><span class="text-5xl">${carta.emoji}</span><p class="text-xs font-bold text-white mt-2">${carta.nombre}</p></div>`;
+        display.className = "w-48 h-64 mx-auto border border-purple-500/40 rounded-2xl flex flex-col items-center justify-center text-slate-300 card-bg p-4 shadow-xl";
+        display.innerHTML = `<span class="text-5xl mb-3">${carta.emoji}</span><h4 class="text-sm font-bold text-white">${carta.nombre}</h4>`;
+        
         document.getElementById("oraculo-titulo").innerText = carta.nombre;
         document.getElementById("oraculo-mensaje").innerHTML = `<strong>Perspectiva:</strong> ${carta.traduccionModerna}<br><br><span class="text-slate-400 italic">${carta.egoVsYo}</span>`;
         document.getElementById("resultado-oraculo").classList.remove("hidden");
@@ -198,3 +234,5 @@
     </script>
   </body>
 </html>
+
+        

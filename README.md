@@ -1,2 +1,1 @@
-# Tarot-
-Aplicación de tarot 
+
